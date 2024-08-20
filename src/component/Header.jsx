@@ -1,13 +1,13 @@
 import React from 'react'
 import { SvgIcon } from '@mui/material'
-import { DarkMode } from '@mui/icons-material'
+import { DarkModeOutlined, LightModeOutlined } from '@mui/icons-material'
 
-function Header() {
+function Header({lightMode,setLightMode}) {
   return (
     <div className='header'>
       <h4>meaning4u</h4>
       <button className='mode'>
-        <SvgIcon component={DarkMode}/>
+        <SvgIcon onClick={()=> setLightMode(!lightMode)} style={{color:"#FFC7ED"}} component={lightMode? LightModeOutlined:DarkModeOutlined}/>
       </button>
     </div>
   )

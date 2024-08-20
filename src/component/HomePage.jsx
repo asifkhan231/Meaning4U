@@ -1,14 +1,15 @@
 import React, { useRef } from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import Header from './Header'
 import { Container, TextField, MenuItem, ThemeProvider, SvgIcon } from '@mui/material'
 import { createTheme } from '@mui/material'
 import languages from '../data/data'
 import { PlayArrow } from '@mui/icons-material'
 import Meanings from './Meanings'
+import { light } from '@mui/material/styles/createPalette'
 
-export default function HomePage() {
+
+export default function HomePage({ lightMode }) {
     const [lang, setLang] = useState('en')
     const [word, setWord] = useState('Welcome')
     const [meaning, setMeaning] = useState([])
@@ -16,12 +17,13 @@ export default function HomePage() {
 
     const darkTheme = createTheme({
         palette: {
-            primary: {
-                main: "#000",
-            },
-            type: "light",
+          primary: {
+            main: !lightMode ? "#000" : "#fff",
+          },
+          mode: !lightMode ? "light" : "dark",
         },
-    });
+      });
+
 
     const fetchData = async () => {
         try {
@@ -38,7 +40,6 @@ export default function HomePage() {
         fetchData()
     }, [word, lang])
 
-    console.log(meaning)
 
     const handleChange = (e) => {
         setWord("");
@@ -58,10 +59,8 @@ export default function HomePage() {
     return (
         <Container maxWidth="md"
             style={{ display: 'flex', flexDirection: 'column', height: "100vh", }}>
-            <ThemeProvider theme={darkTheme}>
-
-                <div className='textField'>
-                    {/* <TextField id="standard-basic" label="Standard" variant="standard" /> */}
+            <div className='textField'>
+                <ThemeProvider theme={darkTheme}>
                     <TextField
                         className="search"
                         value={word}
@@ -84,26 +83,26 @@ export default function HomePage() {
                             </MenuItem>
                         ))}
                     </TextField>
-
+                </ThemeProvider>
+            </div>
+            <div className='word-info'>
+                <div className='word'>
+                    <span className='title'>{word !== '' ? word : "Search word"}</span>
+                    {meaning ? <span className='phonetic'>{meaning[0]?.phonetics[0]?.text}</span> : ""}
                 </div>
-                <div className='word-info'>
-                    <div className='word'>
-                        <span className='title'>{word !== '' ? word : "Search word"}</span>
-                        {meaning ? <span className='phonetic'>{meaning[0]?.phonetics[0]?.text}</span> : ""}
-                    </div>
-                    {
-                        word !== '' && meaning[0]?.phonetics[0]?.audio ?
-                            <div>
-                                <audio ref={playRef} src={meaning[0]?.phonetics[0]?.audio} />
-                                <button onClick={handlePlay}><SvgIcon component={PlayArrow} /></button>
-                            </div>
-                            :
-                            <></>
-                    }
-                </div>
+                {
+                    word !== '' && meaning[0]?.phonetics[1]?.audio ?
+                        <div>
+                            <audio ref={playRef} src={meaning[0]?.phonetics[1]?.audio} />
+                            <button className="audioButton" onClick={handlePlay}><SvgIcon style={{ color: "#ec6dc4" }} component={PlayArrow} /></button>
+                        </div>
+                        :
+                        <></>
+                }
 
-                {meaning && <Meanings meaning={meaning} word={word} lang={lang} />}
-            </ThemeProvider>
+            </div>
+            {meaning && <Meanings meaning={meaning} word={word} lang={lang} lightMode={lightMode} />}
+
         </Container>
     )
 }

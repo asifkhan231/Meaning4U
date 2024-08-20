@@ -1,8 +1,7 @@
 import { Spa } from '@mui/icons-material'
 import React from 'react'
 
-export default function Meanings({ meaning, word, lang }) {
-
+export default function Meanings({ meaning, word, lang,lightMode }) {
     return (
         <div className='meaning__container'>
             {
@@ -11,17 +10,17 @@ export default function Meanings({ meaning, word, lang }) {
                         {Array.isArray(meaning) ? (
                             meaning.map((mean, meanIndex) => (
                                 mean.meanings.map((def, defIndex) => (
-                                    <div className="def__Container" style={{ color: "black" }} key={`${meanIndex}-${defIndex}`}>
-                                        <h5>{def.partOfSpeech}</h5>
+                                    <div className="def__Container" key={`${meanIndex}-${defIndex}`}>
+                                        <h5  className={lightMode?"darkLine":"whiteLine"}>{def.partOfSpeech}</h5>
                                         <ul >
                                             <p>Meaning</p>
                                             {def.definitions.map((definition, defnIndex) => (
                                                 <React.Fragment key={defnIndex}>
                                                     <li >{definition.definition}</li>
                                                     {definition.example ? <span><b>example:</b> {definition.example}</span> : ''}
-                                                    {/* {definition.synonyms ? <span><b>Synonyms:</b>{definition.synonyms.map(s => `${s},`)}</span> : ''} */}
                                                 </React.Fragment>
                                             ))}
+                                            {def.synonyms ? <p>Synonyms:<span style={{marginLeft:"5px",opacity:'1'}}>{def.synonyms.map(s => ` ${s} ,`)}</span></p> : ''}
                                         </ul>
                                     </div>
                                 ))
